@@ -10,6 +10,11 @@ ph=PasswordHasher()
 engine = create_engine("sqlite:///Student.db")
 Base = declarative_base()
 
+ACESSS_TOKEN_EXPIRY = 15
+REFRESH_TOKEN_EXPIRY = 7 * 24 
+SECRET_KEY = "123SECRET"
+ALGORITHM = "HS256"
+
 class StudentCreate(BaseModel):
     roll_no: str = Field(min_length=2, max_length=20)
     name: str = Field(min_length=2, max_length=100)
@@ -52,6 +57,8 @@ class attendance(Base):
     attendance_date = Column(Date)
     status = Column(String)
     created_at= Column(datetime ,default =datetime.now())
+
+
 
 
     

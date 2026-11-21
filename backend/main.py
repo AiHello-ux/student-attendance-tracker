@@ -18,3 +18,11 @@ app.add_middleware(
 
 VALID_ATTENDANCE_STATUSES = ["present", "absent", "late"]
 VALID_ROLES = ["teacher", "admin"]
+
+@app.post("/refresh")
+def refresh(refresh_token):
+    user = functions.verify_token(token=refresh_token, tokentype="refresh")
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid Token")
+    access_token = functions.create_token(username=user["username"], role=user["role"], tokentype="access")
+    return {"access_token": access_token}

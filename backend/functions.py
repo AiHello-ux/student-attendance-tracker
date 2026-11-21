@@ -16,8 +16,13 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-VALID_ATTENDANCE_STATUSES = ["present", "absent", "late"]
+VALID_ATTENDANCE_STATUSES = ["present", "absent"]
 VALID_ROLES = ["teacher", "admin"]
+
+ACESSS_TOKEN_EXPIRY = 15
+REFRESH_TOKEN_EXPIRY = 7 * 24 
+SECRET_KEY = "123SECRET"
+ALGORITHM = "HS256"
 
 class StudentCreate(BaseModel):
     roll_no: str = Field(min_length=2, max_length=20)
@@ -43,3 +48,4 @@ class UserAuth(BaseModel):
     username: str = Field(min_length=1)
     password: str = Field(min_length=1)
     role: str = "teacher"
+

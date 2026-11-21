@@ -45,8 +45,9 @@ def verify_login(username, password):
     except VerifyMismatchError:
         session.close()
         return False
-    role = query.role or "teacher"
     session.close()
+    
+    role = "teacher"
     access_token = create_token(username=username, role=role, tokentype="access")
     refresh_token = create_token(username=username, role=role, tokentype="refresh")
     return {"access_token": access_token, "refresh_token": refresh_token, "role": role}
@@ -55,18 +56,17 @@ def create_token(username: str, role: str = "teacher", tokentype: str = "access"
     if tokentype == "access":
         payload = {
             "username": username,
-            "role": role, 
+            "role": "teacher", 
             "tokentype": tokentype,
             "exp": datetime.now(timezone.utc) + timedelta(minutes=ACESSS_TOKEN_EXPIRY)
         }
     elif tokentype == "refresh":
         payload = {
             "username": username,
-            "role": role,
+            "role": "teacher",
             "tokentype": tokentype,
             "exp": datetime.now(timezone.utc) + timedelta(minutes=REFRESH_TOKEN_EXPIRY)
         }
-
     token = jwt.encode(payload=payload, key=SECRET_KEY, algorithm=ALGORITHM)
     return token
 
@@ -75,10 +75,36 @@ def verify_token(token, tokentype="access"):
         payload = jwt.decode(jwt=token, key=SECRET_KEY, algorithms=[ALGORITHM])
     except Exception:
         return False
-
     if payload["tokentype"] == tokentype:
         return {
             "username": payload["username"],
-            "role": payload.get("role", "teacher")
+            "role": "teacher"
         }
     return False
+
+def mark_attendance(username: str, student_name: str, roll_no: str, attendance_date: date, status: str):
+    session = Session(engine)
+    teacher = session.query(users).filter(users.username == username).first()
+    if not teacher:
+        session.close()
+        return None
+    new_record = attendance(
+        user_id=teacher.id,
+        student_name=student_name,
+        roll_no=roll_no,
+        attendance_date=attendance_date,
+        status=status
+    )
+    session.add(new_record)
+    session.commit()
+    result = {
+        "id": new_record.id,
+        "user_id": new_record.user_id,
+        "student_name": new_record.student_name,
+        "roll_no": new_record.roll_no,
+        "attendance_date": str(new_record.attendance_date),
+        "status": new_record.status,
+        "created_at": str(new_record.created_at)
+    }
+    session.close()
+    return result

@@ -30,7 +30,7 @@ class StudentUpdate(BaseModel):
 
 class AttendanceCreate(BaseModel):
     student_id: int
-    date: date
+    date: Date
     status: str = "present"
 
 class AttendanceUpdate(BaseModel):

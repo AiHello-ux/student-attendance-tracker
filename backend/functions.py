@@ -1,23 +1,14 @@
-from fastapi import FastAPI, HTTPException, Header
-from fastapi.middleware.cors import CORSMiddleware
-from datetime import date
+from sqlalchemy import Column, Integer, Float, String, Date, ForeignKey,Header, create_engine
+from sqlalchemy.orm import Session, declarative_base
 from pydantic import BaseModel, Field
-import functions
+import jwt
+from datetime import datetime , timedelta , timezone
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 
-app = FastAPI(
-    title="Student Attendance Management System",
-    description="Student Attendance Tracker"
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "https://127.0.0.1:5173"],
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
-
-VALID_ATTENDANCE_STATUSES = ["present", "absent", "late"]
-VALID_ROLES = ["teacher", "admin"]
+ph=PasswordHasher()
+engine = create_engine("sqlite:///Student.db")
+Base = declarative_base()
 
 class StudentCreate(BaseModel):
     roll_no: str = Field(min_length=2, max_length=20)
@@ -43,3 +34,26 @@ class UserAuth(BaseModel):
     username: str = Field(min_length=1)
     password: str = Field(min_length=1)
     role: str = "teacher"
+
+class users(Base):
+    __tablename__ = "users"
+    id = Column(Integer , primary_key=True)
+    username = Column(String)
+    email = Column(String)
+    hashed_password = Column(String)
+    created_at = Column(String, default="teacher")
+
+class attendance(Base):
+    __tablename__ = "attendance"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    student_name = Column(String)
+    roll_no = Column(String)
+    attendance_date = Column(Date)
+    status = Column(String)
+    created_at= Column(datetime ,default =datetime.now())
+
+
+    
+
+

@@ -34,9 +34,9 @@ class attendance(Base):
     status = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.now)
 
-def verify_login(username, password):
+def verify_login(email, password):
     session = Session(engine)
-    query = session.query(users).filter(users.username == username).first()
+    query = session.query(users).filter(users.email == email).first()
     if query is None:
         session.close()
         return False
@@ -45,46 +45,50 @@ def verify_login(username, password):
     except VerifyMismatchError:
         session.close()
         return False
+    user_id = query.id
     session.close()
-    
-    role = "teacher"
-    access_token = create_token(username=username, role=role, tokentype="access")
-    refresh_token = create_token(username=username, role=role, tokentype="refresh")
-    return {"access_token": access_token, "refresh_token": refresh_token, "role": role}
 
-def create_token(username: str, role: str = "teacher", tokentype: str = "access"):
+    access_token = create_token(user_id=user_id, email=email, tokentype="access")
+    refresh_token = create_token(user_id=user_id, email=email, tokentype="refresh")
+    return {"access_token": access_token, "refresh_token": refresh_token}
+
+def create_token(user_id: int, email: str, tokentype: str = "access"):
     if tokentype == "access":
         payload = {
-            "username": username,
-            "role": "teacher", 
+            "user_id": user_id,
+            "email": email,
             "tokentype": tokentype,
             "exp": datetime.now(timezone.utc) + timedelta(minutes=ACESSS_TOKEN_EXPIRY)
         }
     elif tokentype == "refresh":
         payload = {
-            "username": username,
-            "role": "teacher",
+            "user_id": user_id,
+            "email": email,
             "tokentype": tokentype,
-            "exp": datetime.now(timezone.utc) + timedelta(minutes=REFRESH_TOKEN_EXPIRY)
+            "exp": datetime.now(timezone.utc) + timedelta(hours=REFRESH_TOKEN_EXPIRY)
         }
     token = jwt.encode(payload=payload, key=SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 def verify_token(token, tokentype="access"):
+    if not token:
+        return False
+    if token.startswith("Bearer "):
+        token = token.replace("Bearer ", "")
     try:
         payload = jwt.decode(jwt=token, key=SECRET_KEY, algorithms=[ALGORITHM])
     except Exception:
         return False
     if payload["tokentype"] == tokentype:
         return {
-            "username": payload["username"],
-            "role": "teacher"
+            "user_id": payload["user_id"],
+            "email": payload["email"]
         }
     return False
 
-def mark_attendance(username: str, student_name: str, roll_no: str, attendance_date: date, status: str):
+def mark_attendance(user_id: int, student_name: str, roll_no: str, attendance_date: date, status: str):
     session = Session(engine)
-    teacher = session.query(users).filter(users.username == username).first()
+    teacher = session.query(users).filter(users.id == user_id).first()
     if not teacher:
         session.close()
         return None

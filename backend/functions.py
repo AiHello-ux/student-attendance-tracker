@@ -44,7 +44,7 @@ def verify_login(email, password):
         ph.verify(query.hashed_password, password)
     except VerifyMismatchError:
         session.close()
-        return False
+        return False    
     user_id = query.id
     session.close()
 
@@ -73,17 +73,12 @@ def create_token(user_id: int, email: str, tokentype: str = "access"):
 def verify_token(token, tokentype="access"):
     if not token:
         return False
-    if token.startswith("Bearer "):
-        token = token.replace("Bearer ", "")
     try:
         payload = jwt.decode(jwt=token, key=SECRET_KEY, algorithms=[ALGORITHM])
-    except Exception:
+    except jwt.InvalidTokenError:
         return False
-    if payload["tokentype"] == tokentype:
-        return {
-            "user_id": payload["user_id"],
-            "email": payload["email"]
-        }
+    if payload.get("tokentype") == tokentype:
+        return payload
     return False
 
 def mark_attendance(user_id: int, student_name: str, roll_no: str, attendance_date: date, status: str):

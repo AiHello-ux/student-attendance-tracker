@@ -19,6 +19,8 @@ app.add_middleware(
 VALID_ATTENDANCE_STATUSES = ["present", "absent", "late"]
 
 
+
+
 class UserAuth(BaseModel):
     email: str = Field(min_length=1)
     password: str = Field(min_length=1)

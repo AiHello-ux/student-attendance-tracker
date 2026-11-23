@@ -34,6 +34,8 @@ class attendance(Base):
     status = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.now)
 
+Base.metadata.create_all(engine)
+
 def register_teacher(username: str, email: str, password: str):
     session = Session(engine)
 

@@ -21,7 +21,7 @@ VALID_ROLES = ["teacher"]
 
 
 class UserAuth(BaseModel):
-    username: str = Field(min_length=1)
+    email: str = Field(min_length=1)
     password: str = Field(min_length=1)
 
 
@@ -39,28 +39,28 @@ def refresh(refresh_token):
     access_token = functions.create_token(username=user["username"], role=user["role"], tokentype="access")
     return {"access_token": access_token}
 
-
 @app.post("/login")
 def login(data: UserAuth):
-    tokens = functions.verify_login(username=data.username, password=data.password)
+    tokens = functions.verify_login(email=data.email, password=data.password)
     if not tokens:
-        raise HTTPException(status_code=401, detail="Invalid Credentials")
+        raise HTTPException(status_code=401, detail="Invalid email or password")
     return tokens
 
-@app.post("/attendance", status_code=201)
+
+@app.post("/attendance")
 def mark_student_attendance(data: AttendanceCreate, token = Header(None)):
     user = functions.verify_token(token=token, tokentype="access")
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid or Expired Token.")
-    if data.status not in VALID_ATTENDANCE_STATUSES:
-        raise HTTPException(status_code=422, detail="Invalid status.")
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    if data.status not in ["present", "absent"]:
+        raise HTTPException(status_code=422, detail="Status must be present or absent")
     result = functions.mark_attendance(
-        username=user["username"],
+        user_id=user["user_id"],
         student_name=data.student_name,
         roll_no=data.roll_no,
         attendance_date=data.attendance_date,
         status=data.status
     )
     if not result:
-        raise HTTPException(status_code=404, detail="Teacher not found.")
+        raise HTTPException(status_code=404, detail="Teacher not found")
     return result

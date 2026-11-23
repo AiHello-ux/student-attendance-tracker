@@ -18,7 +18,7 @@ export default function App() {
   return (
     <div >
       <h2 style={{ textAlign: "center"}}>
-        Warehouse Dispatch Management System
+        Student Attendance Tracker
       </h2>
 
       {!token ? (

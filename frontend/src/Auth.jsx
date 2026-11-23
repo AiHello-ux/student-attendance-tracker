@@ -77,7 +77,7 @@ function Auth({ onLoginSuccess }) {
       <button onClick={handleRegister}>Register</button>
 
       <br /><br/>
-      <hr />
+    
       <br />
 
       <b>Login</b><br/><br/>

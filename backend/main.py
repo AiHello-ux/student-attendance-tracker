@@ -16,9 +16,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+
 VALID_ATTENDANCE_STATUSES = ["present", "absent", "late"]
-
-
 
 
 class UserAuth(BaseModel):

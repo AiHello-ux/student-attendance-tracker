@@ -23,8 +23,8 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: |
             ${{ env.IMAGE }}:latest
@@ -40,6 +40,6 @@ jobs:
             set -e
             sudo systemctl enable --now docker
             sudo docker rm -f studenttracker || true
-            sudo docker run -d --name studenttracker --restart unless-stopped -p 8000:8000 ${{ env.IMAGE }}:${{ env.VERSION }}
+            sudo docker run -d --name studenttracker --restart unless-stopped -p 8001:8001 ${{ env.IMAGE }}:${{ env.VERSION }}
             sudo docker image prune -af
             sudo docker ps --filter name=studenttracker

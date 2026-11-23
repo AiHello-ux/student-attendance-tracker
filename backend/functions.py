@@ -34,6 +34,55 @@ class attendance(Base):
     status = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.now)
 
+def register_teacher(username: str, email: str, password: str):
+    session = Session(engine)
+
+    existing_user = session.query(users).filter(users.email == email).first()
+
+    if existing_user:
+        session.close()
+        return False
+
+    new_user = users(
+        username=username,
+        email=email,
+        hashed_password=ph.hash(password)
+    )
+
+    session.add(new_user)
+    session.commit()
+
+    result = {
+        "id": new_user.id,
+        "username": new_user.username,
+        "email": new_user.email,
+        "created_at": str(new_user.created_at)
+    }
+
+    session.close()
+    return result
+
+def get_attendance_records(user_id: int):
+    session = Session(engine)
+
+    records = session.query(attendance).filter(attendance.user_id == user_id).all()
+
+    result = []
+
+    for record in records:
+        result.append({
+            "id": record.id,
+            "user_id": record.user_id,
+            "student_name": record.student_name,
+            "roll_no": record.roll_no,
+            "attendance_date": str(record.attendance_date),
+            "status": record.status,
+            "created_at": str(record.created_at)
+        })
+
+    session.close()
+    return result
+
 def verify_login(email, password):
     session = Session(engine)
     query = session.query(users).filter(users.email == email).first()

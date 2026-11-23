@@ -23,13 +23,41 @@ class UserAuth(BaseModel):
     email: str = Field(min_length=1)
     password: str = Field(min_length=1)
 
-
 class AttendanceCreate(BaseModel):
     student_name: str = Field(min_length=1)
     roll_no: str = Field(min_length=1)
     attendance_date: date
     status: str = "present"
-    
+
+class UserRegister(BaseModel):
+    username: str = Field(min_length=1)
+    email: str = Field(min_length=1)
+    password: str = Field(min_length=1)
+
+@app.post("/register")
+def register(data: UserRegister):
+    result = functions.register_teacher(
+        username=data.username,
+        email=data.email,
+        password=data.password
+    )
+
+    if not result:
+        raise HTTPException(status_code=409, detail="Email already exists.")
+
+    return result
+
+@app.get("/get-attendance")
+def get_attendance(token=Header(None)):
+    user = functions.verify_token(token=token, tokentype="access")
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or Expired Token.")
+
+    result = functions.get_attendance_records(user_id=user["user_id"])
+
+    return result
+  
 @app.post("/refresh")
 def refresh(refresh_token: str):
     user = functions.verify_token(token=refresh_token, tokentype="refresh")
@@ -50,7 +78,6 @@ def login(data: UserAuth):
     if not tokens:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     return tokens
-
 
 @app.post("/attendance")
 def mark_student_attendance(data: AttendanceCreate, token = Header(None)):

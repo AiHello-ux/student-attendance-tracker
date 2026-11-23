@@ -17,7 +17,6 @@ app.add_middleware(
 )
 
 VALID_ATTENDANCE_STATUSES = ["present", "absent", "late"]
-VALID_ROLES = ["teacher"]
 
 
 class UserAuth(BaseModel):
@@ -32,11 +31,17 @@ class AttendanceCreate(BaseModel):
     status: str = "present"
     
 @app.post("/refresh")
-def refresh(refresh_token):
+def refresh(refresh_token: str):
     user = functions.verify_token(token=refresh_token, tokentype="refresh")
+    
     if not user:
         raise HTTPException(status_code=401, detail="Invalid Token")
-    access_token = functions.create_token(username=user["username"], role=user["role"], tokentype="access")
+    
+    access_token = functions.create_token(
+        user_id=user["user_id"], 
+        email=user["email"], 
+        tokentype="access"
+    )
     return {"access_token": access_token}
 
 

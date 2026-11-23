@@ -7,53 +7,63 @@ A full-stack student attendance management web application built with a **FastAP
 ## 1. Project and Team
 
 - **Project Name:** Student Attendance Tracker (`student-attendance-tracker`)
-- **Team Members:** Melvin, Naman , Gokul 
+- **Team Members:** Melvin, Naman, Gokul
 
 ### Team Members & Endpoint Distribution
 
-| Member Name | Role / Focus | Endpoints & Modules Built | Description |
+| Member Name | Role | Endpoints & Modules Built | Description |
 |:---|:---|:---|:---|
 | **Melvin** | Backend & DB | **A2**, **E2** | `POST /login` (Authentication & JWT generation)<br>`POST /attendance` (Mark student attendance with auth) |
-| **Gokul** | Backend & API | **A1**, **E1** | `POST /register` (Teacher registration with Argon2 hashing)<br>`GET /attendance` (Fetch teacher's attendance records) |
-| **Naman** | Backend & DevOps | **A3**, CI/CD | `POST /refresh` (Generate new access token using refresh token)<br>Docker containerization & GitHub Actions EC2 deployment |
+| **Gokul** | Backend & API | **A1**, **E1** | `POST /register`  |
+| **Naman** | Backend & DevOps | **A3** | `POST /refresh` | 
 
 ---
+
 ## 2. Live App
 
 - **Live Application / API Base URL:**  
   [http://15.252.243.198:8001](http://15.252.243.198:8001)
+
 ---
 
 ## 3. How to Run It
 
 ### Run Backend (FastAPI)
 
-1.  ```bash
+1. ```bash
    cd backend
    ```
-2.  python -m venv venv
-     .\venv\Scripts\Activate.ps1
 
-3. ```pip install -r requirements.txt
+2. ```powershell
+   python -m venv venv
+   .\venv\Scripts\Activate.ps1
    ```
 
-4. ```uvicorn main:app --reload --port 8001
+3. ```bash
+   pip install -r requirements.txt
    ```
-   > Swagger Url  `http://localhost:8001/docs#/`
+
+4. ```bash
+   uvicorn main:app --reload --port 8001
+   ```
+   > Swagger URL: `http://localhost:8001/docs`
 
 ---
 
 ### Run Frontend
 
-1. ```cd frontend
+1. ```bash
+   cd frontend
    ```
 
-2. ```npm install
+2. ```bash
+   npm install
    ```
 
-3. ```npm run dev
+3. ```bash
+   npm run dev
    ```
-   > Open `http://localhost:8001/docs#/` 
+   > Open `http://localhost:5173`
 
 ---
 
@@ -61,19 +71,17 @@ A full-stack student attendance management web application built with a **FastAP
 
 To build and run the entire backend service in a standalone container:
 
-1. Build the Docker image 
-   ```docker build -t student-attendance-tracker:v1 .
+1. Build the Docker image:
+   ```bash
+   docker build -t student-attendance-tracker:v1 .
    ```
 
-2. Run the Docker container with persistent SQLite volume mounting:
-   -  ``` 
-      docker run -d -p 8001:8001 student-attendance-tracker:v1
-     ```
-   - ```
-     docker run -d -p 8001:8001 student-attendance-tracker:v1
-     ```
+2. Run the Docker container:
+   ```bash
+   docker run -d -p 8001:8001 student-attendance-tracker:v1
+   ```
 
-3. Open UrL `http://localhost:8001/docs`.
+3. Open URL: `http://localhost:8001/docs`
 
 ---
 
@@ -108,7 +116,7 @@ To build and run the entire backend service in a standalone container:
 
 ## 5. Database
 
-database is called `Student.db` with two tables:
+The database is called `Student.db` with two tables:
 
 ### Table 1: `users`
 Stores registered teachers and authentication credentials.
@@ -140,12 +148,14 @@ Stores daily attendance records created by teachers.
 
 ### Screenshot 1: Teacher Registration
 ![Teacher Registration](./screenshots/01_registration.png)  
-*Teacher registration,  to create accounts with email and password.*
+*Teacher registration to create accounts with email and password.*
 
 ---
+
 ### Screenshot 2: Teacher Login
 ![Teacher Login](./screenshots/02_login.png)  
-* login interface validating credentials and issuing JWT access and refresh tokens.*
+*Login interface validating credentials and issuing JWT access and refresh tokens.*
+
 ---
 
 ### Screenshot 3: Attendance Dashboard
@@ -156,7 +166,7 @@ Stores daily attendance records created by teachers.
 
 ### Screenshot 4: Error Handling on Screen
 ![Error Message](./screenshots/04_error_message.png)  
-*User interface displaying  401/422 validation error alerts upon invalid input or credentials.*
+*User interface displaying 401/422 validation error alerts upon invalid input or credentials.*
 
 ---
 
@@ -178,4 +188,3 @@ Stores daily attendance records created by teachers.
 1. **Frontend Integration Sync**: The React frontend registration form needs to pass `email` instead of `username` to match the updated backend database schema.
 2. **Dashboard GET Table**: The frontend currently displays the login confirmation view; the attendance table component needs to be hooked up to automatically invoke `GET /attendance` upon login.
 3. **EC2 Container Volume Mapping**: If deployed without mounting an external Docker volume, `Student.db` is ephemeral inside the container and resets on container rebuilds.
-

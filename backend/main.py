@@ -48,7 +48,7 @@ def register(data: UserRegister):
 
     return result
 
-@app.get("/get-attendance")
+@app.get("/attendance")
 def get_attendance(token=Header(None)):
     user = functions.verify_token(token=token, tokentype="access")
 

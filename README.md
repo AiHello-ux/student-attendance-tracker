@@ -73,15 +73,13 @@ To build and run the entire backend service in a standalone container:
      docker run -d -p 8001:8001 student-attendance-tracker:v1
      ```
 
-3. Access the containerized application at `http://localhost:8001/docs`.
+3. Open UrL `http://localhost:8001/docs`.
 
 ---
 
 ## 4. API Contract
 
 ### Completed Endpoints Table (A1–A3, E1–E2)
-
-The FastAPI server runs on port **8001** with CORS enabled.
 
 | # | What it does | Method | Path | Request Body / Params | Success Code | Who Built |
 |:---:|:---|:---:|:---|:---|:---:|:---:|
@@ -94,8 +92,6 @@ The FastAPI server runs on port **8001** with CORS enabled.
 ---
 
 ### Error Rules Table
-
-The API validates business invariants and raises explicit HTTP exceptions with explanatory messages:
 
 | Rule | HTTP Status | Detail Message Example |
 |:---|:---:|:---|
@@ -112,7 +108,7 @@ The API validates business invariants and raises explicit HTTP exceptions with e
 
 ## 5. Database
 
-The application utilizes an SQLite database (`Student.db`) with two primary relational tables:
+database is called `Student.db` with two tables:
 
 ### Table 1: `users`
 Stores registered teachers and authentication credentials.
@@ -144,14 +140,12 @@ Stores daily attendance records created by teachers.
 
 ### Screenshot 1: Teacher Registration
 ![Teacher Registration](./screenshots/01_registration.png)  
-*Teacher registration form allowing new educators to create accounts with email and password.*
+*Teacher registration,  to create accounts with email and password.*
 
 ---
-
 ### Screenshot 2: Teacher Login
 ![Teacher Login](./screenshots/02_login.png)  
-*Secure login interface validating credentials and issuing JWT access and refresh tokens.*
-
+* login interface validating credentials and issuing JWT access and refresh tokens.*
 ---
 
 ### Screenshot 3: Attendance Dashboard
@@ -162,7 +156,7 @@ Stores daily attendance records created by teachers.
 
 ### Screenshot 4: Error Handling on Screen
 ![Error Message](./screenshots/04_error_message.png)  
-*User interface displaying descriptive 401/422 validation error alerts upon invalid input or credentials.*
+*User interface displaying  401/422 validation error alerts upon invalid input or credentials.*
 
 ---
 
@@ -185,9 +179,3 @@ Stores daily attendance records created by teachers.
 2. **Dashboard GET Table**: The frontend currently displays the login confirmation view; the attendance table component needs to be hooked up to automatically invoke `GET /attendance` upon login.
 3. **EC2 Container Volume Mapping**: If deployed without mounting an external Docker volume, `Student.db` is ephemeral inside the container and resets on container rebuilds.
 
-### What We Would Add With More Time
-1. **Batch Attendance Roster**: Allow teachers to mark entire classroom attendance simultaneously using one-click toggles.
-2. **Attendance Reports & Export**: One-click download of monthly attendance sheets in CSV and PDF formats for academic records.
-3. **Analytics Dashboard**: Graphical charts displaying student attendance rates, chronic absenteeism, and class-level averages.
-4. **Role-Based Access Control (RBAC)**: Support for Student and Administrator roles in addition to Teachers.
-5. **Automated Absence Alerts**: Automatic email or SMS notifications sent to students or guardians when marked absent.

@@ -213,7 +213,7 @@ Stores daily attendance records created by teachers.
 ---
 
 ### Screenshot 6: Green GitHub Actions CI/CD Run
-![GitHub Actions CI/CD](./screenshots/06_github_actions.png)  
+![GitHub Actions CI/CD](./screenshots/github_green_action.png)  
 *Successful automated GitHub Actions workflow building the Docker image and deploying to AWS EC2.*
 
 ---

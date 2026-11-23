@@ -13,9 +13,9 @@ A full-stack student attendance management web application built with a **FastAP
 
 | Member Name | Role / Focus | Endpoints & Modules Built | Description |
 |:---|:---|:---|:---|
-| **Melvin** | Backend & DB Lead | **A2**, **E2** | `POST /login` (Authentication & JWT generation)<br>`POST /attendance` (Mark student attendance with auth) |
-| **[Partner 2 Name]** | Backend & API | **A1**, **E1** | `POST /register` (Teacher registration with Argon2 hashing)<br>`GET /attendance` (Fetch teacher's attendance records) |
-| **[Partner 3 Name]** | DevOps & Frontend | **A3**, Frontend & CI/CD | `POST /refresh` (Generate new access token from refresh token)<br>Docker containerization & GitHub Actions EC2 deployment |
+| **Melvin** | Backend & DB | **A2**, **E2** | `POST /login` (Authentication & JWT generation)<br>`POST /attendance` (Mark student attendance with auth) |
+| **Gokul** | Backend & API | **A1**, **E1** | `POST /register` (Teacher registration with Argon2 hashing)<br>`GET /attendance` (Fetch teacher's attendance records) |
+| **Naman** | Backend & DevOps | **A3**, CI/CD | `POST /refresh` (Generate new access token using refresh token)<br>Docker containerization & GitHub Actions EC2 deployment |
 
 ---
 
@@ -125,10 +125,10 @@ The FastAPI server runs on port **8001** with CORS enabled.
 
 | # | What it does | Method | Path | Request Body / Params | Success Code | Who Built |
 |:---:|:---|:---:|:---|:---|:---:|:---:|
-| **A1** | Register a new teacher | `POST` | `/register` | **JSON Body:**<br>`{"username": "john_doe", "email": "john@school.edu", "password": "securepassword123"}` | `201` | [Partner 2 Name] |
+| **A1** | Register a new teacher | `POST` | `/register` | **JSON Body:**<br>`{"username": "john_doe", "email": "john@school.edu", "password": "securepassword123"}` | `201` | Gokul |
 | **A2** | Login and generate JWT access and refresh tokens | `POST` | `/login` | **JSON Body:**<br>`{"email": "john@school.edu", "password": "securepassword123"}` | `200` | Melvin |
-| **A3** | Generate a new access token using a refresh token | `POST` | `/refresh` | **Query Param:** `refresh_token`<br>*(or JSON Body: `{"refresh_token": "..."}`)* | `200` | [Partner 3 Name] |
-| **E1** | Get all attendance records created by the logged-in teacher | `GET` | `/attendance` | **Header:** `token: <access_token>`<br>**Body:** *None* | `200` | [Partner 2 Name] |
+| **A3** | Generate a new access token using a refresh token | `POST` | `/refresh` | **Query Param:** `refresh_token`<br>*(or JSON Body: `{"refresh_token": "..."}`)* | `200` | Naman |
+| **E1** | Get all attendance records created by the logged-in teacher | `GET` | `/attendance` | **Header:** `token: <access_token>`<br>**Body:** *None* | `200` | Gokul |
 | **E2** | Mark a student's attendance and associate it with the logged-in teacher | `POST` | `/attendance` | **Header:** `token: <access_token>`<br>**JSON Body:**<br>`{"student_name": "Jane Smith", "roll_no": "CS101", "attendance_date": "2026-11-23", "status": "present"}` | `200` *(or `201`)* | Melvin |
 
 ---

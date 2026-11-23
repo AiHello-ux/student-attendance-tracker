@@ -7,7 +7,7 @@ A full-stack student attendance management web application built with a **FastAP
 ## 1. Project and Team
 
 - **Project Name:** Student Attendance Tracker (`student-attendance-tracker`)
-- **Team Size:** 3 Members
+- **Team Members:** Melvin, Naman , Gokul 
 
 ### Team Members & Endpoint Distribution
 
@@ -18,79 +18,42 @@ A full-stack student attendance management web application built with a **FastAP
 | **Naman** | Backend & DevOps | **A3**, CI/CD | `POST /refresh` (Generate new access token using refresh token)<br>Docker containerization & GitHub Actions EC2 deployment |
 
 ---
-
 ## 2. Live App
 
 - **Live Application / API Base URL:**  
-  [http://YOUR_EC2_PUBLIC_IP:8001](http://YOUR_EC2_PUBLIC_IP:8001)
-
-- **Interactive Swagger Documentation:**  
-  [http://YOUR_EC2_PUBLIC_IP:8001/docs](http://YOUR_EC2_PUBLIC_IP:8001/docs)
-
-*(Note: Replace `YOUR_EC2_PUBLIC_IP` with your team's AWS EC2 instance public IPv4 address, e.g. `http://54.210.xxx.xxx:8001`)*
-
+  [http://15.252.243.198:8001](http://15.252.243.198:8001)
 ---
 
 ## 3. How to Run It
 
-Follow the steps below to run the project on a fresh laptop.
-
-### Prerequisites
-- **Python 3.10+**
-- **Node.js 18+** & **npm**
-- **Docker** (optional, for containerized run)
-
----
-
 ### Run Backend (FastAPI)
 
-1. Open a terminal and navigate to the `backend` folder:
-   ```bash
+1.  ```bash
    cd backend
    ```
-
-2. Create and activate a Python virtual environment:
-   - **Windows (PowerShell):**
-     ```powershell
-     python -m venv venv
+2.  python -m venv venv
      .\venv\Scripts\Activate.ps1
-     ```
-   - **macOS / Linux:**
-     ```bash
-     python3 -m venv venv
-     source venv/bin/activate
-     ```
 
-3. Install required Python packages:
-   ```bash
-   pip install -r requirements.txt
+3. ```pip install -r requirements.txt
    ```
 
-4. Start the FastAPI development server on port **8001**:
-   ```bash
-   uvicorn main:app --reload --port 8001
+4. ```uvicorn main:app --reload --port 8001
    ```
-   > Swagger UI docs are live at `http://127.0.0.1:8001/docs`
+   > Swagger Url  `http://localhost:8001/docs#/`
 
 ---
 
-### Run Frontend (React + Vite)
+### Run Frontend
 
-1. Open a separate terminal and navigate to the `frontend` folder:
-   ```bash
-   cd frontend
+1. ```cd frontend
    ```
 
-2. Install Node dependencies:
-   ```bash
-   npm install
+2. ```npm install
    ```
 
-3. Start the Vite development server:
-   ```bash
-   npm run dev
+3. ```npm run dev
    ```
-   > Open `http://localhost:5173` in your browser.
+   > Open `http://localhost:8001/docs#/` 
 
 ---
 
@@ -98,19 +61,16 @@ Follow the steps below to run the project on a fresh laptop.
 
 To build and run the entire backend service in a standalone container:
 
-1. Build the Docker image from the project root:
-   ```bash
-   docker build -t student-attendance-tracker .
+1. Build the Docker image 
+   ```docker build -t student-attendance-tracker:v1 .
    ```
 
 2. Run the Docker container with persistent SQLite volume mounting:
-   - **Windows (PowerShell):**
-     ```powershell
-     docker run -d -p 8001:8001 -v ${PWD}/backend:/app --name attendance-app student-attendance-tracker
+   -  ``` 
+      docker run -d -p 8001:8001 student-attendance-tracker:v1
      ```
-   - **Linux / macOS:**
-     ```bash
-     docker run -d -p 8001:8001 -v $(pwd)/backend:/app --name attendance-app student-attendance-tracker
+   - ```
+     docker run -d -p 8001:8001 student-attendance-tracker:v1
      ```
 
 3. Access the containerized application at `http://localhost:8001/docs`.

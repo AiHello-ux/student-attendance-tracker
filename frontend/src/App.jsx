@@ -1,36 +1,28 @@
 import { useState } from "react";
 import Auth from "./Auth";
+import Attendance from "./Attendance";
 
 export default function App() {
   const [token, setToken] = useState("");
-  const [role, setRole] = useState("");
 
-  function handleLoginSuccess(newToken, newRole) {
+  function handleLoginSuccess(newToken) {
     setToken(newToken);
-    setRole(newRole);
   }
 
   function handleLogout() {
     setToken("");
-    setRole("");
   }
 
   return (
-    <div >
-      <h2 style={{ textAlign: "center"}}>
+    <div>
+      <h2 style={{ textAlign: "center" }}>
         Student Attendance Tracker
       </h2>
 
       {!token ? (
         <Auth onLoginSuccess={handleLoginSuccess} />
       ) : (
-        <div>
-          <p>Logged in as: <b>{role}</b></p>
-          <button onClick={handleLogout}>Logout</button>
-          <br /><br />
-          <hr />
-          <p>Login successful!</p>
-        </div>
+        <Attendance token={token} onLogout={handleLogout} />
       )}
     </div>
   );

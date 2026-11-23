@@ -16,7 +16,6 @@ function Auth({ onLoginSuccess }) {
       body: JSON.stringify({
         username: regUsername,
         password: regPassword,
-        role: "teacher",
       }),
     })
       .then((res) => res.json())
@@ -24,7 +23,7 @@ function Auth({ onLoginSuccess }) {
         if (data.detail) {
           setMessage("Error: " + data.detail);
         } else {
-          setMessage("Teacher registered successfully! Now please log in.");
+          setMessage("Registered successfully! Now please log in.");
           setRegUsername("");
           setRegPassword("");
         }
@@ -45,18 +44,18 @@ function Auth({ onLoginSuccess }) {
         if (data.detail) {
           setMessage("Error: " + data.detail);
         } else {
-          onLoginSuccess(data.access_token, data.role);
+          onLoginSuccess(data.access_token);
         }
       });
   }
 
   return (
     <div>
-      <h3>Teacher Authentication</h3>
+      <h3>Authentication</h3>
 
       <p><b>{message}</b></p>
 
-      <b>Register New Teacher</b><br/><br/>
+      <b>Register New User</b><br /><br />
       <b>Username: </b>
       <input
         placeholder="Username"
@@ -76,11 +75,11 @@ function Auth({ onLoginSuccess }) {
 
       <button onClick={handleRegister}>Register</button>
 
-      <br /><br/>
-    
+      <br /><br />
+      <hr />
       <br />
 
-      <b>Login</b><br/><br/>
+      <b>Login</b><br /><br />
       <b>Username: </b>
       <input
         placeholder="Username"

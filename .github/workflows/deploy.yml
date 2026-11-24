@@ -38,26 +38,3 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
-
-            # Install Docker if not already installed
-            if ! command -v docker >/dev/null 2>&1; then
-              if command -v apt-get >/dev/null 2>&1; then
-                sudo apt-get update -y
-                sudo apt-get install -y docker.io
-              elif command -v dnf >/dev/null 2>&1; then
-                sudo dnf install -y docker
-              elif command -v yum >/dev/null 2>&1; then
-                sudo yum install -y docker
-              fi
-            fi
-
-            sudo systemctl enable --now docker
-            sudo usermod -aG docker ${{ secrets.EC2_USER }} || true
-
-            # Pull the new image and restart the container
-            sudo docker pull ${{ env.IMAGE }}:${{ env.VERSION }}
-            sudo docker rm -f studenttracker || true
-            sudo docker run -d --name studenttracker --restart unless-stopped -p 8001:8001 ${{ env.IMAGE }}:${{ env.VERSION }}
-            sudo docker image prune -af
-            sudo docker ps --filter name=studenttracker
-            

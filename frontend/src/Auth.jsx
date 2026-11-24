@@ -4,8 +4,9 @@ const API_URL = "http://127.0.0.1:8001";
 
 function Auth({ onLoginSuccess }) {
   const [regUsername, setRegUsername] = useState("");
+  const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
-  const [loginUsername, setLoginUsername] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [message, setMessage] = useState("");
 
@@ -15,6 +16,7 @@ function Auth({ onLoginSuccess }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: regUsername,
+        email: regEmail,
         password: regPassword,
       }),
     })
@@ -25,6 +27,7 @@ function Auth({ onLoginSuccess }) {
         } else {
           setMessage("Registered successfully! Now please log in.");
           setRegUsername("");
+          setRegEmail("");
           setRegPassword("");
         }
       });
@@ -35,7 +38,7 @@ function Auth({ onLoginSuccess }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: loginUsername,
+        email: loginEmail,
         password: loginPassword,
       }),
     })
@@ -64,6 +67,14 @@ function Auth({ onLoginSuccess }) {
       />
       <br /><br />
 
+      <b>Email: </b>
+      <input
+        placeholder="Email"
+        value={regEmail}
+        onChange={(e) => setRegEmail(e.target.value)}
+      />
+      <br /><br />
+
       <b>Password: </b>
       <input
         type="password"
@@ -80,11 +91,11 @@ function Auth({ onLoginSuccess }) {
       <br />
 
       <b>Login</b><br /><br />
-      <b>Username: </b>
+      <b>Email: </b>
       <input
-        placeholder="Username"
-        value={loginUsername}
-        onChange={(e) => setLoginUsername(e.target.value)}
+        placeholder="Email"
+        value={loginEmail}
+        onChange={(e) => setLoginEmail(e.target.value)}
       />
       <br /><br />
 
